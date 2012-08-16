@@ -1,8 +1,9 @@
 //config
-var module_name = 'pc_timeline';
-var api = ProfisCMS.global.BASE_URL +'plugins/'+ module_name +'/PC_api.php';
+Ext.ns('PC.plugin.timeline');
+PC.plugin.timeline.Name = 'pc_timeline';
+PC.plugin.timeline.API = PC.global.BASE_URL +'admin/api/plugin/pc-timeline/';
 //localization
-ProfisCMS.utils.localize('mod.'+ module_name, {
+PC.utils.localize('mod.'+ PC.plugin.timeline.Name, {
 	en: {
 		no_date: 'Without date'
 	},
@@ -13,16 +14,15 @@ ProfisCMS.utils.localize('mod.'+ module_name, {
 		no_date: 'Без даты'
     }
 });
+PC.plugin.timeline.controllers = ['pc_timeline'];
 //register hooks
-Ext.ns('PC.plugin.timeline');
-PC.plugin.timeline.controllers = [];
 PC.plugin.timeline.Register = function(ctrl){
 	PC.plugin.timeline.controllers.push(ctrl);
 }
 PC.plugin.timeline.enabledDates = [];
 PC.plugin.timeline.Refresh_enabled_dates = function(picker, ctrl, pid, success_callback){
 	Ext.Ajax.request({
-		url: api +'?action=get_calendar_enabled_dates',
+		url: PC.plugin.timeline.API +'get-calendar-enabled-dates/',
 		method: 'POST',
 		params: {
 			controller: ctrl,
@@ -48,15 +48,15 @@ PC.plugin.timeline.Refresh_status_element = function(statusEl, childs){
 	return true;
 };
 PC.hooks.Register('tree.load', function(params){
-	var ln = ProfisCMS.i18n.mod[module_name];
+	var ln = PC.i18n.mod[PC.plugin.timeline.Name];
 	var tree = params.tree;
 	var n = params.node;
 	var ctrl = n.attributes.controller;
 	if (PC.plugin.timeline.controllers.has(ctrl) === false) return false;
-	//if (n.attributes.controller != module_name) return false;
+	//if (n.attributes.controller != PC.plugin.timeline.Name) return false;
 	//create anchor element for datepicker
 	var pickerId =  n.ui.elNode.id +'-datepicker';
-	//do not render another copy of datepicker for this node if there is one already renedered
+	//do not render another copy of datepicker for this node if there is already renedered one
 	if (Ext.get(pickerId)) return false;
 	var pickerEl = document.createElement('li');
 	pickerEl.setAttribute('id', pickerId);
@@ -74,7 +74,7 @@ PC.hooks.Register('tree.load', function(params){
 				var formattedDate = date.format('Y-m-d');
 				var statusEl = Ext.get(pickerId +'-status');
 				statusEl.update('<img style="vertical-align:-2px;margin-right:3px" src="images/calendar.gif" alt="" />'+ formattedDate);
-				tree.addLoaderParam(module_name, 'date', formattedDate);
+				tree.addLoaderParam(PC.plugin.timeline.Name, 'date', formattedDate);
 				n.reload();
 				n.attributes.dateFilter = formattedDate;
 				if (typeof callback == 'function') callback();
@@ -120,7 +120,7 @@ PC.hooks.Register('tree.load', function(params){
 });
 PC.hooks.Register('page.save', function(params){
 	/*remove datefield if page type was changed or removed
-	if (params.data.controller == module_name {
+	if (params.data.controller == PC.plugin.timeline.Name {
 		//...
 		return true;
 	}*/
@@ -177,8 +177,8 @@ PC.hooks.Register('tree.drop', function(params){
 					if (data.success) return;
 				}
 				Ext.MessageBox.show({
-					title: ProfisCMS.i18n.error,
-					msg: ProfisCMS.i18n.msg.error.data.save,
+					title: PC.i18n.error,
+					msg: PC.i18n.msg.error.data.save,
 					buttons: Ext.MessageBox.OK,
 					icon: Ext.MessageBox.ERROR
 				});
@@ -193,7 +193,7 @@ PC.hooks.Register('dialog.multilnedit.beforerender', function(params){
 	//insert additional date field
 	params.dialog.insert(params.dialog.items.length, {
 		xtype: 'datefield',
-		fieldLabel: ProfisCMS.i18n.date,
+		fieldLabel: PC.i18n.date,
 		ref: '../_date',
 		anchor: '100%',
 		format: 'Y-m-d',
@@ -215,7 +215,7 @@ PC.hooks.Register('dialog.multilnedit.beforerender', function(params){
 	});
 	params.dialog.insert(params.dialog.items.length, {
 		xtype: 'timefield',
-		fieldLabel: ProfisCMS.i18n.time,
+		fieldLabel: PC.i18n.time,
 		ref: '_time',
 		anchor: '100%',
 		format: 'H:i',
@@ -248,11 +248,11 @@ PC.hooks.Register('tree.containercontextmenu', function(params){
 			//change tree.current_node & show custom menu
 			var newCurrentNodeId = datePickerEl.parentNode.previousSibling.getAttribute('ext:tree-node-id');
 			if (newCurrentNodeId) {
-				var newCurrentNode = ProfisCMS.global.tree_pages.getNodeById(newCurrentNodeId);
+				var newCurrentNode = PC.global.tree_pages.getNodeById(newCurrentNodeId);
 				if (newCurrentNode) {
-					ProfisCMS.global.tree_menu.current_node = newCurrentNode;
+					PC.global.tree_menu.current_node = newCurrentNode;
 					var menu = new Ext.menu.Menu({
-						items: [ProfisCMS.tree_actions.create_subpage]
+						items: [PC.tree_actions.create_subpage]
 					});
 					menu.showAt(params.event.getXY());
 				}

@@ -1,20 +1,18 @@
 <?php
-function pc_timeline_renderer($id, $plugin) {
+function pc_timeline_renderer($params) {
 	$date = null;
-	$additional = v($_POST['additional'], null);
-	if (!empty($additional)) {
-		$additional = json_decode($additional, true);
-		$date = v($additional['pc_timeline']['date'], null);
-	}
-	$id = v($_POST['node']);
+	$additional = v($params['additional']['pc_timeline'], null);
+	$date = v($additional['date'], null);
+	$id = v($params['id']);
 	$site_id = v($_POST['site']);
 	if (empty($date)) {
-		$r = Get_tree_childs($id, $site_id, null, null, null);
+		$list = Get_tree_childs($id, $site_id, false, null, null);
 	}
 	else {
-		$r = Get_tree_childs($id, $site_id, null, null, $date);
+		$list = Get_tree_childs($id, $site_id, false, null, $date);
 	}
-	$out = (is_array($r)?$r:array());
-	return $out;
+	$params['data'] = (is_array($list)?$list:array());
+	return true;
 };
-$plugins->Register_renderer('tree', 'pc_timeline_renderer');
+//$plugins->Register_renderer('tree', 'pc_timeline_renderer');
+$core->Register_hook('core/tree/get-childs/pc_timeline', 'pc_timeline_renderer');
