@@ -248,11 +248,11 @@ PC.hooks.Register('tree.containercontextmenu', function(params){
 			//change tree.current_node & show custom menu
 			var newCurrentNodeId = datePickerEl.parentNode.previousSibling.getAttribute('ext:tree-node-id');
 			if (newCurrentNodeId) {
-				var newCurrentNode = PC.global.tree_pages.getNodeById(newCurrentNodeId);
+				var newCurrentNode = PC.tree.component.getNodeById(newCurrentNodeId);
 				if (newCurrentNode) {
-					PC.global.tree_menu.current_node = newCurrentNode;
+					PC.tree.menus.current_node = newCurrentNode;
 					var menu = new Ext.menu.Menu({
-						items: [PC.tree_actions.create_subpage]
+						items: [PC.tree.actions.CreateSubpage]
 					});
 					menu.showAt(params.event.getXY());
 				}
