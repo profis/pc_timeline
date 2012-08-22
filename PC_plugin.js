@@ -1,7 +1,7 @@
 //config
 Ext.ns('PC.plugin.timeline');
 PC.plugin.timeline.Name = 'pc_timeline';
-PC.plugin.timeline.API = PC.global.BASE_URL +'admin/api/plugin/pc-timeline/';
+PC.plugin.timeline.API = PC.global.BASE_URL +'admin/api/plugin/pc_timeline/';
 //localization
 PC.utils.localize('mod.'+ PC.plugin.timeline.Name, {
 	en: {
