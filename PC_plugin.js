@@ -48,16 +48,18 @@ PC.plugin.timeline.Refresh_status_element = function(statusEl, childs){
 	return true;
 };
 PC.hooks.Register('tree.load', function(params){
-	var ln = PC.i18n.mod[PC.plugin.timeline.Name];
-	var tree = params.tree;
+	if (params.node == undefined) return false;
 	var n = params.node;
 	var ctrl = n.attributes.controller;
 	if (PC.plugin.timeline.controllers.has(ctrl) === false) return false;
+	if (params.tree == undefined) return false;
+	var tree = params.tree;
 	//if (n.attributes.controller != PC.plugin.timeline.Name) return false;
 	//create anchor element for datepicker
 	var pickerId =  n.ui.elNode.id +'-datepicker';
 	//do not render another copy of datepicker for this node if there is already renedered one
 	if (Ext.get(pickerId)) return false;
+	var ln = PC.i18n.mod[PC.plugin.timeline.Name];
 	var pickerEl = document.createElement('li');
 	pickerEl.setAttribute('id', pickerId);
 	pickerEl.style.marginBottom = '2px';
@@ -188,6 +190,7 @@ PC.hooks.Register('tree.drop', function(params){
 	return true;
 });
 PC.hooks.Register('dialog.multilnedit.beforerender', function(params){
+	if (params.node == undefined) return false;
 	if (PC.plugin.timeline.controllers.has(params.node.parentNode.attributes.controller) === false) return false;
 	if (!params.create_mode) return false;
 	//insert additional date field
