@@ -14,7 +14,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http:#www.gnu.org/licenses/>.
 global $plugin_url;
-$plugin_url = $this->core->Get_url('plugins', '', $this->currently_parsing);
+$plugin_url = $this->core->Get_url('plugins', '', $this->currentlyParsing);
 function pc_site_icons_replace_cb($params) {
 	global $plugin_url;
 	switch ($params[2]) {

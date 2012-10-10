@@ -1,4 +1,7 @@
 <?php
+/*
+ * Plugin configuration
+ */
 $configuration = array(
 	'author'=> 'JSC "Profis"',
 	'name'=> 'Link Icons',
