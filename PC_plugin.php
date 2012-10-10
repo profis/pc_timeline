@@ -34,6 +34,11 @@ function pc_site_icons_replace_cb($params) {
 	$icon =& $i;
 	return '<img class="pc_icon" src="'.$plugin_url.'icons/'.$icon.'" alt="" />'.$params[1];
 }
+
+/**
+ * 
+ * @param type $params
+ */
 function pc_site_icons_hook($params) {
 	$text =& $params['text'];
 	$text = preg_replace_callback("#(<a href=\"[^\"]+?\.(docx?|xlsx?|pdf|zip|rar|7z)\")#", "pc_site_icons_replace_cb", $text);
