@@ -15,6 +15,13 @@
 # along with this program.  If not, see <http:#www.gnu.org/licenses/>.
 global $plugin_url;
 $plugin_url = $this->core->Get_url('plugins', '', $this->currentlyParsing);
+
+/**
+ * 
+ * @global type $plugin_url
+ * @param type $params
+ * @return string
+ */
 function pc_site_icons_replace_cb($params) {
 	global $plugin_url;
 	switch ($params[2]) {
