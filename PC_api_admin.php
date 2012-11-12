@@ -16,6 +16,7 @@
  */
 header('Content-Type: application/json');
 header('Cache-Control: no-cache');
+//
 $out = array();
 switch (v($routes->Get(1))) {
 	case 'get-calendar-enabled-dates':
