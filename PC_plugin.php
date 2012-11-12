@@ -16,3 +16,10 @@ function pc_timeline_renderer($params) {
 };
 //$plugins->Register_renderer('tree', 'pc_timeline_renderer');
 $core->Register_hook('core/tree/get-childs/pc_timeline', 'pc_timeline_renderer');
+
+Register_class_autoloader('PC_controller_pc_timeline', dirname(__FILE__).'/PC_controller.php');
+
+//$this->core->Register_hook("create_page", "PC_controller_gov39_calendar::onCreatePage");
+$this->core->Register_hook("before_page_save", "PC_controller_pc_timeline::onBeforePageSave");
+$this->core->Register_hook("after_page_save", "PC_controller_pc_timeline::onAfterPageSave");
+$this->core->Register_hook("move_page", "PC_controller_pc_timeline::onMovePage");

@@ -1,4 +1,5 @@
 <?php
+
 //register this plugin to use the "pc_timeline" tree renderer
 $plugins->Register_renderer('tree', function($id, $plugin) {
 	$plugin = 'pc_timeline';

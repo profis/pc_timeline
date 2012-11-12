@@ -1,10 +1,10 @@
 <?php
 /*
-v1.1:	Plugin adapted to Profis CMS version 4.2.2+
+v1.3
 */
 $configuration = array(
 	'author'=> 'JSC "Profis"',
 	'name'=> 'Calendar-filtered admin page browser',
 	'description'=> 'Calendar-filtered page browsing in administration panel',
-	'version'=> '1.1'
+	'version'=> '1.3'
 );

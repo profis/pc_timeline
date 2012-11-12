@@ -21,13 +21,18 @@ switch (v($routes->Get(1))) {
 	case 'get-calendar-enabled-dates':
 		$ctrl = v($_POST['controller']);
 		$pid = v($_POST['pid']);
-		$r = $db->prepare("SELECT * FROM {$cfg['db']['prefix']}calendar_index WHERE controller=? and cpid=?");
+		$r = $db->prepare("SELECT * FROM {$cfg['db']['prefix']}plugin_timeline_index WHERE controller=? and cpid=?");
 		$s = $r->execute(array($ctrl, $pid));
 		if ($s) $out = array(
 			'success'=> true,
 			'data'=> $r->fetchAll()
 		);
 		break;
+		
+	case 'calendar_rebuild':
+		PC_controller_pc_timeline::fullRebuildIndex();
+		break;
+		
 	default: $out['error'] = 'Invalid action';
 }
 echo json_encode($out);
