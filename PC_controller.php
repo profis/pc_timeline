@@ -9,6 +9,7 @@ final class PC_controller_pc_timeline extends PC_controller {
 	static $indexControllers = "pc_timeline";
 
 	public function Process($data) {
+		$this->site->Register_data("data", $data);
 		$this->Render();
 	}
 	
@@ -235,5 +236,110 @@ final class PC_controller_pc_timeline extends PC_controller {
 				}
 			}
 		}
+	}
+	
+	////////////////////////////////////////////////////////////////////////////
+	// RSS handling. Look into rss plugin's HOWTO.txt for reference
+	////////////////////////////////////////////////////////////////////////////
+	static function Get_page_name() {
+		global $core, $site, $page;
+		$controller = substr(get_class(), 14);
+		$articles_pid = $page->Get_by_controller($controller);
+		$data = $page->Get_page($articles_pid[0]);
+		return $data["name"];
+	}
+	
+	static function Get_rss_category_name() {
+		global $core, $site, $page;
+		$controller = substr(get_class(), 14);
+		$articles_pid = $page->Get_by_controller($controller);
+		$data = $page->Get_page($articles_pid[0]);
+		if( empty($data) ) return null;
+		if( $site->data["id"] != 2 ) return $data["name"];
+		$data2 = $page->Get_page($data["idp"]);
+		return empty($data2) ? $data["name"] : $data2["name"];
+	}
+	
+	static function Get_rss_title($param = null) {
+		return lang("rss_feed_title", self::Get_page_name() );
+	}
+
+	public function Get_rss_head_data() {
+		return Array(
+			"controller" => substr(get_class(), 14),
+			"name" => self::Get_rss_title(null), // null - no params, since we have no rubrics
+			"param" => null // null - no params, since we have no rubrics
+		);
+	}
+	
+	
+	// This function must be registered as hook for "rss.get_list" event
+	static function Get_rss_list($params) {
+		global $page;
+		$rss_list = &$params["rss_list"];
+		
+		$controller = substr(get_class(), 14);
+		$articles_pids = $page->Get_by_controller($controller);
+		
+		//print_pre($articles_pids);
+		
+		foreach($articles_pids as $iid => $pid ) {
+			$data = $page->Get_page($pid);
+			if( empty($data) ) continue;
+
+			$rss_list[] = Array(
+				"controller" => substr(get_class(), 14),
+				"name" => $data["name"],
+				"items" => Array(
+					Array(
+						"name" => $data["name"],
+						"param" => $pid // null - no params, since we have no rubrics
+					)
+				)
+			);
+		}
+		
+		
+		//print_pre($rss_list);
+	}
+	
+	// This function HAS to be static and MAY NOT change it's name if you want rss feed to function properly
+	static function Get_rss_data($param) {
+		global $core, $site, $page;
+		$channels = Array();
+		
+		$channel = self::get_channel($param);
+		if ($channel) {
+			$channels[] = $channel;
+		}
+		
+		//print_pre($channels);
+		return $channels;
+	}
+	
+	static function get_channel($news_page_id) {
+		global $site, $page, $cfg;
+		$channel = array(
+			'items' => array()
+		);
+		$news_page = $page->Get_page($news_page_id);
+		//print_pre($news_page);
+		$cur_submenu = $page->Get_submenu($news_page['pid'], array('name', 'text', 'info', 'info2', 'date', 'route', 'permalink'));
+		//print_r($cur_submenu);
+		if(!empty($cur_submenu)){
+			$_sub_counter = 0;
+			foreach($cur_submenu as $_sub){
+				$link = $page->Get_page_link_from_data($_sub);
+				if (!$link) {
+					continue;
+				}
+				$channel['items'][] = array(
+					'title' => $_sub['name'],
+					'description' => $_sub['text'],
+					'link' => $cfg['url']['base'] . $link
+				);
+			};
+		}
+		return $channel;
 	}
 }

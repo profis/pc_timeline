@@ -9,7 +9,11 @@ function pc_timeline_renderer($params) {
 		$list = Get_tree_childs($id, $site_id, false, null, null);
 	}
 	else {
+		//echo $date;
 		$list = Get_tree_childs($id, $site_id, false, null, $date);
+		//echo '----------------';
+		//print_r($list);
+		//echo '================';
 	}
 	$params['data'] = (is_array($list)?$list:array());
 	return true;
@@ -23,3 +27,7 @@ Register_class_autoloader('PC_controller_pc_timeline', dirname(__FILE__).'/PC_co
 $this->core->Register_hook("before_page_save", "PC_controller_pc_timeline::onBeforePageSave");
 $this->core->Register_hook("after_page_save", "PC_controller_pc_timeline::onAfterPageSave");
 $this->core->Register_hook("move_page", "PC_controller_pc_timeline::onMovePage");
+
+
+Register_class_autoloader('PC_controller_pc_timeline', dirname(__FILE__).'/PC_controller.php');
+$this->core->Register_hook("rss.get_list", "PC_controller_pc_timeline::Get_rss_list");
