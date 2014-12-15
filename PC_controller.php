@@ -29,13 +29,6 @@ final class PC_controller_pc_timeline extends PC_controller {
 				if( !isset($index[$base_controller][$base_id][$p["date"]]) ) $index[$base_controller][$base_id][$p["date"]] = 0;
 				$index[$base_controller][$base_id][$p["date"]]++;
 				
-				if( $base_controller == "gov39_photo" || $base_controller == "gov39_video" ) {
-					$bc = $base_controller . "_all";
-					if( !isset($index[$bc]) ) $index[$bc] = Array();
-					if( !isset($index[$bc][$p["site"]-1]) ) $index[$bc][$p["site"]-1] = Array();
-					if( !isset($index[$bc][$p["site"]-1][$p["date"]]) ) $index[$bc][$p["site"]-1][$p["date"]] = 0;
-					$index[$bc][$p["site"]-1][$p["date"]]++;
-				}
 				if( isset($_REQUEST["calendar_rebuild"]) ) {
 					echo "<li><strong>" . str_repeat("-", $level) . " $p[site]: $p[id], $p[controller], $p[date] -> $base_controller:$base_id</strong></li>";
 				}
@@ -181,19 +174,11 @@ final class PC_controller_pc_timeline extends PC_controller {
 			$inc = $p["date"];
 		}
 		if( $inc != $dec ) {
-			if( $dec ) {
+			if( $dec )
 				self::countDay(self::$previousParentController, self::$previousParentId, $dec, -1);
-				if( self::$previousParentController == "gov39_photo" || self::$previousParentController == "gov39_video" )
-					self::countDay(self::$previousParentController . "_all", 0, $dec, -1);
-			}
-			if( $inc ) {
+			if( $inc )
 				self::countDay(self::$previousParentController, self::$previousParentId, $inc, 1);
-				if( self::$previousParentController == "gov39_photo" || self::$previousParentController == "gov39_video" )
-					self::countDay(self::$previousParentController . "_all", 0, $inc, 1);
-			}
 			self::recacheIndex(self::$previousParentController, self::$previousParentId);
-			if( self::$previousParentController == "gov39_photo" || self::$previousParentController == "gov39_video" )
-				self::recacheIndex(self::$previousParentController . "_all", 0);
 		}
 	}
 	
@@ -219,22 +204,10 @@ final class PC_controller_pc_timeline extends PC_controller {
 		if( $p1 ) {
 			self::countDay($parent_from[0]["controller"], $parent_from[0]["id"], $p["date"], -1);
 			self::recacheIndex($parent_from[0]["controller"], $parent_from[0]["id"]);
-			if( $parent_from[0]["controller"] != $parent_to[0]["controller"] ) {
-				if( $parent_from[0]["controller"] == "gov39_video" || $parent_from[0]["controller"] == "gov39_photo" ) {
-					self::countDay($parent_from[0]["controller"] . "_all", 0, $p["date"], -1);
-					self::recacheIndex($parent_from[0]["controller"] . "_all", 0);
-				}
-			}
 		}
 		if( $p2 ) {
 			self::countDay($parent_to[0]["controller"], $parent_to[0]["id"], $p["date"], 1);
 			self::recacheIndex($parent_to[0]["controller"], $parent_to[0]["id"]);
-			if( $parent_from[0]["controller"] != $parent_to[0]["controller"] ) {
-				if( $parent_to[0]["controller"] == "gov39_video" || $parent_to[0]["controller"] == "gov39_photo" ) {
-					self::countDay($parent_to[0]["controller"] . "_all", 0, $p["date"], 1);
-					self::recacheIndex($parent_to[0]["controller"] . "_all", 0);
-				}
-			}
 		}
 	}
 	
