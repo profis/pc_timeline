@@ -25,7 +25,6 @@ switch (v($routes->Get(1))) {
 		$query = "SELECT * FROM {$cfg['db']['prefix']}plugin_timeline_index WHERE controller=? and cpid=?";
 		$r = $db->prepare($query);
 		$query_params = array($ctrl, $pid);
-		//echo $core->get_debug_query_string($query, $query_params);
 		$s = $r->execute($query_params);
 		if ($s) $out = array(
 			'success'=> true,
